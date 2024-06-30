@@ -1,0 +1,183 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Panels.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="CDrawManager.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Client.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="DLLMain.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="VMTHooks.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="CSignature.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Log.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="CNetVars.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="CBaseEntity.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Util.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="CMenu.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Aimbot.cpp">
+      <Filter>Hacks\Aimbot</Filter>
+    </ClCompile>
+    <ClCompile Include="Misc.cpp">
+      <Filter>Hacks\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="Followbot.cpp">
+      <Filter>Hacks\Followbot</Filter>
+    </ClCompile>
+    <ClCompile Include="BitBuff.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="DUM.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="AutoQueue.cpp">
+      <Filter>Hacks\AutoQueue</Filter>
+    </ClCompile>
+    <ClCompile Include="Listener.cpp">
+      <Filter>Hacks\Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="ChatSpam.cpp">
+      <Filter>Hacks\ChatSpam</Filter>
+    </ClCompile>
+    <ClCompile Include="json.cpp">
+      <Filter>Headers</Filter>
+    </ClCompile>
+    <ClCompile Include="ConfigManager.cpp">
+      <Filter>Hacks\ConfigManager</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CDrawManager.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CGlobalVars.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Client.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="getvfunc.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Panels.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="SDK.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="WeaponList.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="VMTHooks.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CSignature.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Log.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Color.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CNetVars.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="bspflags.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Util.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CMenu.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Aimbot.h">
+      <Filter>Hacks\Aimbot</Filter>
+    </ClInclude>
+    <ClInclude Include="studio.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Misc.h">
+      <Filter>Hacks\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="Followbot.h">
+      <Filter>Hacks\Followbot</Filter>
+    </ClInclude>
+    <ClInclude Include="bitbuff.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="DUM.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="AutoQueue.h">
+      <Filter>Hacks\AutoQueue</Filter>
+    </ClInclude>
+    <ClInclude Include="Listener.h">
+      <Filter>Hacks\Listener</Filter>
+    </ClInclude>
+    <ClInclude Include="ChatSpam.h">
+      <Filter>Hacks\ChatSpam</Filter>
+    </ClInclude>
+    <ClInclude Include="json.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="ConfigManager.h">
+      <Filter>Hacks\ConfigManager</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Headers">
+      <UniqueIdentifier>{79b023fd-cbc8-41db-bfda-b06ff3b945f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source">
+      <UniqueIdentifier>{7561bd3e-f399-43c0-80fd-202de503f606}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Hacks">
+      <UniqueIdentifier>{bd4db70f-c9e9-4991-848f-748551954a06}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Hacks\Aimbot">
+      <UniqueIdentifier>{4f190136-d775-450b-9049-6a6fdd0ab7a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Hacks\Misc">
+      <UniqueIdentifier>{338f8ff1-8354-487f-9830-cc45a33039d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Hacks\Followbot">
+      <UniqueIdentifier>{32019b88-5003-452b-b5fe-d1ac355cc81e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Hacks\AutoQueue">
+      <UniqueIdentifier>{69ff993d-3248-40fa-912c-e931fcb5903a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Hacks\Listener">
+      <UniqueIdentifier>{15428b03-38b4-429d-b449-cceea1d888c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Hacks\ChatSpam">
+      <UniqueIdentifier>{71b6a27f-38c8-405a-b876-757c402b87e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Hacks\ConfigManager">
+      <UniqueIdentifier>{fb51a6ca-19b9-4c8c-9478-83113948d2d6}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
