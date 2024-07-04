@@ -81,7 +81,7 @@ void CNav::Replay(CBaseEntity* pLocal, CUserCmd* pCommand) {
     }
 
     // Check if we are stuck (not making progress)
-    if (distanceToLastPos < 5.0f && (flCurTime - lastProgressTime) > 5.0f) {
+    if (distanceToLastPos < 5.0f && (flCurTime - lastProgressTime) > 5.0f && currentNode != 0) {
         // Define a distance threshold for considering nearby nodes
         const float distanceThreshold = 200.0f;
 
@@ -153,7 +153,7 @@ void CNav::Replay(CBaseEntity* pLocal, CUserCmd* pCommand) {
         Vector viewangles;
         VectorAngles(node.position - currentPosition, viewangles);
         pCommand->viewangles = viewangles;
-        if (!gCvars.aimbot_silent) // || gCvars.hvh_enable;
+        if (gCvars.aimbot_silent) // || gCvars.hvh_enable;
         {
             gInts.Engine->SetViewAngles(pCommand->viewangles);
         }
