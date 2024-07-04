@@ -71,20 +71,22 @@ void CNav::Replay(CBaseEntity* pLocal, CUserCmd* pCommand) {
 
     // Check if the player is dead
     if (pLocal->GetLifeState() & LIFE_DEAD) {
-        gNav.currentNode = 0;
-        gNav.isReversing = false;
-        gNav.lastProgressTime = flCurTime;
-        gNav.lastPosition = currentPosition;
-        //printf("Player dead, restarting from the beginning\n");
+        currentNode = 0;
+        isReversing = false;
+        lastProgressTime = flCurTime;
+        lastPosition = currentPosition;
+        printf("Player dead, restarting from the beginning\n");
         return;
     }
+
     // Check if we are stuck (not making progress)
-    if (distanceToLastPos < 5.0f && (flCurTime - gNav.lastProgressTime) > 30.0f && currentNode != 0 || currentNode != 1 || currentNode != 2) {
-        // Find the closest visible node to continue from
-        size_t closestNode = gNav.currentNode; // Start searching from current node
+    if (distanceToLastPos < 5.0f && (flCurTime - lastProgressTime) > 30.0f && currentNode != 0) 
+    {
+        // Find the closest node to continue from
+        size_t closestNode = currentNode; // Start searching from current node
         float closestDistance = FLT_MAX;
 
-        for (size_t i = gNav.currentNode; i < nodes.size(); ++i) {
+        for (size_t i = currentNode; i < nodes.size(); ++i) {
             float distance = currentPosition.DistTo(nodes[i].position);
             if (distance < closestDistance) {
                 closestNode = i;
@@ -93,9 +95,9 @@ void CNav::Replay(CBaseEntity* pLocal, CUserCmd* pCommand) {
         }
 
         // If no closer node found after current, search from beginning to current
-        if (closestNode == gNav.currentNode) {
+        if (closestNode == currentNode) {
             closestDistance = FLT_MAX;
-            for (size_t i = 0; i < gNav.currentNode; ++i) {
+            for (size_t i = 0; i < currentNode; ++i) {
                 float distance = currentPosition.DistTo(nodes[i].position);
                 if (distance < closestDistance) {
                     closestNode = i;
@@ -104,68 +106,68 @@ void CNav::Replay(CBaseEntity* pLocal, CUserCmd* pCommand) {
             }
         }
 
-        gNav.currentNode = closestNode;
-        gNav.lastProgressTime = flCurTime;
-        gNav.lastPosition = currentPosition;
-        //printf("Bot stuck, moving to closest visible node: %zu\n", closestNode);
+        currentNode = closestNode;
+        lastProgressTime = flCurTime;
+        lastPosition = currentPosition;
+        printf("Bot stuck, moving to closest node: %zu\n", closestNode);
     }
 
     // Update progress time and position if making progress
     if (distanceToLastPos > 5.0f) {
-        gNav.lastProgressTime = flCurTime;
-        gNav.lastPosition = currentPosition;
+        lastProgressTime = flCurTime;
+        lastPosition = currentPosition;
     }
 
-    if (gNav.currentNode >= nodes.size()) {
-        gNav.currentNode = 0; // Reset to the beginning if exceeded
-        gNav.isReversing = !gNav.isReversing; // Toggle reversing state
-        if (gNav.isReversing) {
+    if (currentNode >= nodes.size()) {
+        currentNode = 0; // Reset to the beginning if exceeded
+        isReversing = !isReversing; // Toggle reversing state
+        if (isReversing) {
             std::reverse(nodes.begin(), nodes.end()); // Reverse nodes for reverse traversal
         }
     }
 
-    Node& node = nodes[gNav.currentNode];
+    Node& node = nodes[currentNode];
     float distance = currentPosition.DistTo(node.position);
 
     if (distance < 50.0f) {
         if (node.jumped) {
             pCommand->buttons |= IN_JUMP;
-            //printf("Jumped at node: %f, %f, %f\n", node.position.x, node.position.y, node.position.z);
+            printf("Jumped at node: %f, %f, %f\n", node.position.x, node.position.y, node.position.z);
         }
 
-        gNav.currentNode++;
+        currentNode++;
     }
-    else if (gNav.currentNode > 0 && currentPosition.DistTo(nodes[gNav.currentNode - 1].position) > distance) {
-        // If interrupted, find the closest visible node instead of restarting from the beginning
-        size_t closestNode = gNav.currentNode; // Start searching from current node
+    else if (currentNode > 0 && currentPosition.DistTo(nodes[currentNode - 1].position) > distance) {
+        // If interrupted, find the closest node instead of restarting from the beginning
+        size_t closestNode = currentNode; // Start searching from current node
         float closestDistance = FLT_MAX;
 
-        for (size_t i = gNav.currentNode; i < nodes.size(); ++i) {
+        for (size_t i = currentNode; i < nodes.size(); ++i) {
             float distance = currentPosition.DistTo(nodes[i].position);
-            if (distance < closestDistance && Util->IsVisible(pLocal, pLocal, currentPosition, nodes[i].position)) {
+            if (distance < closestDistance) {
                 closestNode = i;
                 closestDistance = distance;
             }
         }
 
         // If no closer node found after current, search from beginning to current
-        if (closestNode == gNav.currentNode) {
+        if (closestNode == currentNode) {
             closestDistance = FLT_MAX;
-            for (size_t i = 0; i < gNav.currentNode; ++i) {
+            for (size_t i = 0; i < currentNode; ++i) {
                 float distance = currentPosition.DistTo(nodes[i].position);
-                if (distance < closestDistance && Util->IsVisible(pLocal, pLocal, currentPosition, nodes[i].position)) {
+                if (distance < closestDistance) {
                     closestNode = i;
                     closestDistance = distance;
                 }
             }
         }
 
-        gNav.currentNode = closestNode;
-        gNav.isReversing = false;
+        currentNode = closestNode;
+        isReversing = false;
     }
-    else if (gNav.currentNode == 0 && currentPosition.DistTo(nodes.front().position) < 50.0f) {
+    else if (currentNode == 0 && currentPosition.DistTo(nodes.front().position) < 50.0f) {
         // If very close to the first node, continue from there
-        gNav.currentNode = 0;
+        currentNode = 0;
     }
     else {
         auto result = ComputeMove(currentPosition, node.position, pCommand);
@@ -173,11 +175,11 @@ void CNav::Replay(CBaseEntity* pLocal, CUserCmd* pCommand) {
         pCommand->sidemove = result.second;
         Vector viewangles;
         VectorAngles(node.position - currentPosition, viewangles);
-        if (gCvars.aimbot_silent) { 
+        if (gCvars.aimbot_silent)
+        {
             pCommand->viewangles = viewangles;
             gInts.Engine->SetViewAngles(pCommand->viewangles);
         }
-        // Otherwise, use aimbot viewangles (if applicable)
     }
 }
 
@@ -187,7 +189,7 @@ void CNav::Replay(CBaseEntity* pLocal, CUserCmd* pCommand) {
 bool CNav::LoadFromFile(const char* filename) {
     std::ifstream file(filename);
     if (!file.is_open()) {
-        
+
         //std::cerr << "Failed to open file for reading: " << filename << std::endl;
         return false;
     }
@@ -241,8 +243,8 @@ void CNav::Run(CBaseEntity* pLocal, CUserCmd* pCommand) {
 
     // check this or else our navbot will just use the wrong files
     if (pLocal->GetTeamNum() != previousTeamNum || gInts.Engine->GetLevelName() != previousMap) {
-        loadedFromFile = false; 
-        previousTeamNum = pLocal->GetTeamNum(); 
+        loadedFromFile = false;
+        previousTeamNum = pLocal->GetTeamNum();
         previousMap = gInts.Engine->GetLevelName();
 
         // reload the file

@@ -16,7 +16,6 @@ public:
     void Record(CBaseEntity* pLocal, CUserCmd* pCmd);
     void Replay(CBaseEntity* pLocal, CUserCmd* pCommand);
     bool LoadFromFile(const char* filename);
-private:
     std::vector<Node> nodes;
     size_t currentNode = 0;
     bool isRecording = false;
