@@ -173,7 +173,7 @@ void CNav::Replay(CBaseEntity* pLocal, CUserCmd* pCommand) {
         auto result = ComputeMove(currentPosition, node.position, pCommand);
         pCommand->forwardmove = result.first;
         pCommand->sidemove = result.second;
-        // ok maybe not look at path :skull:
+        
     }
 }
 

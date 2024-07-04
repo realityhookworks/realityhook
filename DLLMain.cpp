@@ -45,7 +45,6 @@ DWORD WINAPI dwMainThread( LPVOID lpArguments )
 		gInts.EventManager = (IGameEventManager2*)EngineFactory("GAMEEVENTSMANAGER002", NULL);
 
 		gListener.Init();
-		gStart.executeCommandsFromFileList("realitybot_autoexec.txt");
 		XASSERT(gInts.Client);
 		XASSERT(gInts.EntList);
 		XASSERT(gInts.Engine);

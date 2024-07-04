@@ -3,6 +3,7 @@
 #include "CDrawManager.h"
 #include "Util.h"
 #include "ConfigManager.h"
+#include "StartUp.h"
 #include "AutoQueue.h"
 
 CScreenSize gScreenSize;
@@ -33,10 +34,11 @@ void __fastcall Hooked_PaintTraverse( PVOID pPanels, int edx, unsigned int vguiP
 			if (gScreenSize.iScreenWidth != iWidth || gScreenSize.iScreenHeight != iHeight)
 				gInts.Engine->GetScreenSize(gScreenSize.iScreenWidth, gScreenSize.iScreenHeight);
 
-			bool once = false;
+			static bool once = false;
 			if (!once)
 			{
 				gConfig.Load();
+				gStart.executeCommandsFromFileList("realitybot_autoexec.txt");
 				once = true;
 			}
 			gQueue.Run();
