@@ -14,6 +14,31 @@ public:
 
 	void FixMovementForUserCmd(CUserCmd* cmd, old_movement_t mov);
 
+	void LogToParty(const char* message, bool onlyonce)
+	{
+		std::string dingus = "tf_party_chat\"" + std::string(message) + "\"";
+
+		if (!onlyonce)
+		{
+			gInts.Engine->ClientCmd_Unrestricted(dingus.c_str());
+		}
+		bool wasOnce = false;
+		if (onlyonce)
+		{
+			if (!wasOnce)
+			{
+				gInts.Engine->ClientCmd_Unrestricted(dingus.c_str());
+				wasOnce = true;
+			}
+		}
+
+	}
+	void LogToConsole(const char* message)
+	{
+		std::string console = "echo " + std::string(message);
+		gInts.Engine->ClientCmd_Unrestricted(console.c_str());
+	}
+
 	PVOID InitKeyValue();
 };
 

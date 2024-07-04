@@ -39,7 +39,7 @@ bool __fastcall Hooked_CreateMove(PVOID ClientMode, int edx, float input_sample_
 		gSpam.Run();
 		gMisc.Run(pLocal, pCommand);
 		gAim.Run(pLocal, pCommand);
-		gFollow.Run(pLocal, pCommand);
+		gNav.Run(pLocal, pCommand);
 	}
 	catch(...)
 	{

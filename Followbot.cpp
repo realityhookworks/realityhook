@@ -7,33 +7,10 @@
 #include <fstream>
 #include <iostream>
 #include <limits>
+#include "Util.h"
 #include "Aimbot.h"
 
-CFollow gFollow;
-
-struct Node {
-    Vector position;
-    bool jumped;
-};
-
-class CMovementRecorder {
-public:
-    void StartRecording();
-    void StopRecording(const char* filename);
-    void Record(CBaseEntity* pLocal, CUserCmd* pCmd);
-    void Replay(CBaseEntity* pLocal, CUserCmd* pCommand);
-    bool LoadFromFile(const char* filename);
-
-private:
-    std::vector<Node> nodes;
-    size_t currentNode = 0;
-    bool isRecording = false;
-    bool isReversing = false;
-    float lastProgressTime = 0.0f;
-    Vector lastPosition;
-};
-
-CMovementRecorder gMovementRecorder;
+CNav gNav;
 
 std::pair<float, float> ComputeMove(const Vector& a, const Vector& b, CUserCmd* pCommand) {
     Vector diff = (b - a);
@@ -49,18 +26,18 @@ std::pair<float, float> ComputeMove(const Vector& a, const Vector& b, CUserCmd* 
     return { cos(yaw) * 450, -sin(yaw) * 450 };
 }
 
-void CMovementRecorder::StartRecording() {
+void CNav::StartRecording() {
     nodes.clear();
     isRecording = true;
 }
 
-void CMovementRecorder::StopRecording(const char* filename) {
+void CNav::StopRecording(const char* filename) {
     if (!isRecording) return;
 
     isRecording = false;
     std::ofstream file(filename);
     if (!file.is_open()) {
-        std::cerr << "Failed to open file for writing: " << filename << std::endl;
+        //std::cerr << "Failed to open file for writing: " << filename << std::endl;
         return;
     }
 
@@ -69,10 +46,11 @@ void CMovementRecorder::StopRecording(const char* filename) {
     }
 
     file.close();
-    std::cout << "Nodes saved to file: " << filename << std::endl;
+    //std::cout << "Nodes saved to file: " << filename << std::endl;
+    Util->LogToParty("[NavBOT] Nodes saved to file.", true);
 }
 
-void CMovementRecorder::Record(CBaseEntity* pLocal, CUserCmd* pCmd) {
+void CNav::Record(CBaseEntity* pLocal, CUserCmd* pCmd) {
     if (!isRecording) return;
 
     Vector currentPosition = pLocal->GetAbsOrigin();
@@ -80,10 +58,10 @@ void CMovementRecorder::Record(CBaseEntity* pLocal, CUserCmd* pCmd) {
 
     // Log current position and whether the player jumped
     nodes.push_back({ currentPosition, jumped });
-    printf("Recorded node: %f, %f, %f, jumped: %d\n", currentPosition.x, currentPosition.y, currentPosition.z, jumped);
+    //printf("Recorded node: %f, %f, %f, jumped: %d\n", currentPosition.x, currentPosition.y, currentPosition.z, jumped);
 }
 
-void CMovementRecorder::Replay(CBaseEntity* pLocal, CUserCmd* pCommand) {
+void CNav::Replay(CBaseEntity* pLocal, CUserCmd* pCommand) {
     if (nodes.empty())
         return;
 
@@ -91,26 +69,26 @@ void CMovementRecorder::Replay(CBaseEntity* pLocal, CUserCmd* pCommand) {
     Vector currentPosition = pLocal->GetAbsOrigin();
     float distanceToLastPos = currentPosition.DistTo(lastPosition);
 
-    // Check if we are stuck (not making progress)
-    if ((distanceToLastPos < 5.0f && (flCurTime - lastProgressTime) > 60.0f) || (pLocal->GetLifeState() & LIFE_DEAD)) {
-        currentNode = 0; // Restart from the beginning
+    // Check if the player is dead
+    if (pLocal->GetLifeState() & LIFE_DEAD) {
+        currentNode = 0;
         isReversing = false;
-        lastProgressTime = flCurTime; // Reset the progress time
-        lastPosition = currentPosition; // Reset last position
-        printf("Bot stuck or dead, restarting from the beginning\n");
+        lastProgressTime = flCurTime;
+        lastPosition = currentPosition;
+        //printf("Player dead, restarting from the beginning\n");
+        Util->LogToParty("pLocal is dead, Restarting from the first node", true);
         return;
     }
 
-    // Update progress time and position if making progress
-    if (distanceToLastPos > 5.0f) {
-        lastProgressTime = flCurTime;
-        lastPosition = currentPosition;
-    }
+    // Check if we are stuck (not making progress)
+    if (distanceToLastPos < 5.0f && (flCurTime - lastProgressTime) > 5.0f) {
+        // Define a distance threshold for considering nearby nodes
+        const float distanceThreshold = 200.0f;
 
-    // Find the closest node if the bot is stuck
-    if (currentNode == 0 && distanceToLastPos < 5.0f && (flCurTime - lastProgressTime) > 50.0f) {
-        size_t closestNode = 0;
-        float closestDistance = 3000;
+        // Find the closest visible node to continue from
+        size_t closestNode = currentNode;
+        float closestDistance = distanceThreshold;
+
         for (size_t i = 0; i < nodes.size(); ++i) {
             float distance = currentPosition.DistTo(nodes[i].position);
             if (distance < closestDistance) {
@@ -118,10 +96,35 @@ void CMovementRecorder::Replay(CBaseEntity* pLocal, CUserCmd* pCommand) {
                 closestDistance = distance;
             }
         }
+
+        // If no visible node is found, just use the closest node ignoring visibility within the threshold
+        if (closestNode == currentNode) {
+            for (size_t i = 0; i < nodes.size(); ++i) {
+                float distance = currentPosition.DistTo(nodes[i].position);
+                if (distance < closestDistance) {
+                    closestNode = i;
+                    closestDistance = distance;
+                }
+            }
+        }
+
+        // If no close node is found, fallback to the current node
+        if (closestDistance == distanceThreshold) {
+            closestNode = currentNode;
+        }
+
         currentNode = closestNode;
-        lastProgressTime = flCurTime; // Reset the progress time
-        lastPosition = currentPosition; // Reset last position
-        printf("Bot stuck, moving to closest node: %zu\n", closestNode);
+        lastProgressTime = flCurTime;
+        lastPosition = currentPosition;
+        //printf("Bot stuck, moving to closest node: %zu\n", closestNode);
+        std::string debugstuck = "Bot stuck, moving to closest node: " + closestNode;
+        Util->LogToParty(debugstuck.c_str(), true);
+    }
+
+    // Update progress time and position if making progress
+    if (distanceToLastPos > 5.0f) {
+        lastProgressTime = flCurTime;
+        lastPosition = currentPosition;
     }
 
     if (currentNode >= nodes.size()) {
@@ -138,38 +141,33 @@ void CMovementRecorder::Replay(CBaseEntity* pLocal, CUserCmd* pCommand) {
     if (distance < 50.0f) {
         if (node.jumped) {
             pCommand->buttons |= IN_JUMP;
-            printf("Jumped at node: %f, %f, %f\n", node.position.x, node.position.y, node.position.z);
+            //printf("Jumped at node: %f, %f, %f\n", node.position.x, node.position.y, node.position.z);
         }
 
         currentNode++;
-    }
-    else if (currentNode > 0 && currentPosition.DistTo(nodes[currentNode - 1].position) > distance) {
-        // If interrupted, restart from the beginning
-        currentNode = 0;
-        isReversing = false;
-        lastProgressTime = flCurTime; // Reset the progress time
-        lastPosition = currentPosition; // Reset last position
-    }
-    else if (currentNode == 0 && currentPosition.DistTo(nodes.front().position) < 50.0f) {
-        // If very close to the first node, restart from the beginning
-        currentNode = 0;
-        isReversing = false;
-        lastProgressTime = flCurTime; // Reset the progress time
-        lastPosition = currentPosition; // Reset last position
     }
     else {
         auto result = ComputeMove(currentPosition, node.position, pCommand);
         pCommand->forwardmove = result.first;
         pCommand->sidemove = result.second;
+        Vector viewangles;
+        VectorAngles(node.position - currentPosition, viewangles);
+        pCommand->viewangles = viewangles;
+        if (!gCvars.aimbot_silent) // || gCvars.hvh_enable;
+        {
+            gInts.Engine->SetViewAngles(pCommand->viewangles);
+        }
+        // Otherwise, use aimbot viewangles (if applicable)
     }
 }
 
 
 
-bool CMovementRecorder::LoadFromFile(const char* filename) {
+bool CNav::LoadFromFile(const char* filename) {
     std::ifstream file(filename);
     if (!file.is_open()) {
-        std::cerr << "Failed to open file for reading: " << filename << std::endl;
+        
+        //std::cerr << "Failed to open file for reading: " << filename << std::endl;
         return false;
     }
 
@@ -180,7 +178,7 @@ bool CMovementRecorder::LoadFromFile(const char* filename) {
     }
 
     file.close();
-    std::cout << "Nodes loaded from file: " << filename << std::endl;
+    //std::cout << "Nodes loaded from file: " << filename << std::endl;
     return true;
 }
 
@@ -210,7 +208,7 @@ const char* uh(CBaseEntity* pLocal) {
     return "UNKNOWN";
 }
 
-void CFollow::Run(CBaseEntity* pLocal, CUserCmd* pCommand) {
+void CNav::Run(CBaseEntity* pLocal, CUserCmd* pCommand) {
     if (!pLocal->GetTeamNum())
         return; // make sure we have a team before using teamname.
     std::string teamname = uh(pLocal);
@@ -228,8 +226,8 @@ void CFollow::Run(CBaseEntity* pLocal, CUserCmd* pCommand) {
 
         // reload the file
         if (gCvars.misc_replay) {
-            if (!gMovementRecorder.LoadFromFile(filename.c_str())) {
-                printf("Failed to load nodes from file!\n");
+            if (!gNav.LoadFromFile(filename.c_str())) {
+                //printf("Failed to load nodes from file!\n");
                 return;
             }
             loadedFromFile = true;
@@ -238,26 +236,26 @@ void CFollow::Run(CBaseEntity* pLocal, CUserCmd* pCommand) {
 
     if (gCvars.misc_record) {
         if (!wasRecording) {
-            gMovementRecorder.StartRecording();
+            gNav.StartRecording();
             wasRecording = true;
         }
-        gMovementRecorder.Record(pLocal, pCommand);
+        gNav.Record(pLocal, pCommand);
         loadedFromFile = false; // Reset loaded flag when recording
     }
     else if (wasRecording) {
-        gMovementRecorder.StopRecording(filename.c_str());
+        gNav.StopRecording(filename.c_str());
         wasRecording = false;
     }
 
     if (gCvars.misc_replay) {
         if (!loadedFromFile) {
-            if (!gMovementRecorder.LoadFromFile(filename.c_str())) {
-                printf("Failed to load nodes from file!\n");
+            if (!gNav.LoadFromFile(filename.c_str())) {
+                //printf("Failed to load nodes from file!\n");
                 return;
             }
             loadedFromFile = true;
         }
 
-        gMovementRecorder.Replay(pLocal, pCommand);
+        gNav.Replay(pLocal, pCommand);
     }
 }
