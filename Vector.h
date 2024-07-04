@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "SDK.h"
+//#include "SDK.h"
 
 #define CHECK_VALID( _v ) 0
 #define Assert( _exp ) ((void)0)

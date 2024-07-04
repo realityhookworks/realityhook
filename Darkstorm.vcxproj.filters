@@ -64,6 +64,9 @@
     <ClCompile Include="ConfigManager.cpp">
       <Filter>Hacks\ConfigManager</Filter>
     </ClCompile>
+    <ClCompile Include="Startup.cpp">
+      <Filter>Hacks\StartThing</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CDrawManager.h">
@@ -147,6 +150,9 @@
     <ClInclude Include="ConfigManager.h">
       <Filter>Hacks\ConfigManager</Filter>
     </ClInclude>
+    <ClInclude Include="StartUp.h">
+      <Filter>Hacks\StartThing</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Headers">
@@ -178,6 +184,9 @@
     </Filter>
     <Filter Include="Hacks\ConfigManager">
       <UniqueIdentifier>{fb51a6ca-19b9-4c8c-9478-83113948d2d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Hacks\StartThing">
+      <UniqueIdentifier>{1bbecc81-499e-42dc-a977-1a62a085ad45}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

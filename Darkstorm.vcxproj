@@ -107,6 +107,7 @@
     <ClCompile Include="Misc.cpp" />
     <ClCompile Include="Panels.cpp" />
     <ClCompile Include="CSignature.cpp" />
+    <ClCompile Include="Startup.cpp" />
     <ClCompile Include="Util.cpp" />
     <ClCompile Include="VMTHooks.cpp" />
   </ItemGroup>
@@ -133,6 +134,7 @@
     <ClInclude Include="Panels.h" />
     <ClInclude Include="SDK.h" />
     <ClInclude Include="CSignature.h" />
+    <ClInclude Include="StartUp.h" />
     <ClInclude Include="studio.h" />
     <ClInclude Include="Util.h" />
     <ClInclude Include="Vector.h" />
