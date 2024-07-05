@@ -34,7 +34,14 @@ void CConfig::Save()
         Save["gMisc"]["replay"] = gCvars.misc_replay;
         Save["gMisc"]["micspam"] = gCvars.misc_micspam;
         Save["gMisc"]["chatspam"] = gCvars.misc_chatspam;
-
+        Save["gMisc"]["thirdperson"] = gCvars.misc_thirdperson;
+        /*
+        * AA
+        */
+        Save["gAA"]["enable"] = gCvars.antiaim_enable;
+        Save["gAA"]["pitch"] = gCvars.antiaim_pitch;
+        Save["gAA"]["yaw"] = gCvars.antiaim_yaw;
+        Save["gAA"]["spinspeed"] = gCvars.antiaim_spinspeed;
         output << Save;
         output.close();
     }
@@ -65,5 +72,10 @@ void CConfig::Load()
         gCvars.misc_replay = Load["gMisc"]["replay"].asFloat();
         gCvars.misc_micspam = Load["gMisc"]["micspam"].asFloat();
         gCvars.misc_chatspam = Load["gMisc"]["chatspam"].asFloat();
+        gCvars.misc_thirdperson = Load["gMisc"]["thirdperson"].asFloat();
+        /* AA */
+        gCvars.antiaim_enable = Load["gAA"]["enable"].asFloat();
+        gCvars.antiaim_pitch = Load["gAA"]["pitch"].asFloat();
+        gCvars.antiaim_yaw = Load["gAA"]["yaw"].asFloat();
     }
 }

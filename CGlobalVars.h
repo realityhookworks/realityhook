@@ -30,6 +30,16 @@ public:
 	float misc_replay;
 	float misc_micspam;
 	float misc_chatspam;
+
+	/* anti-aim */
+	float antiaim_switch;
+	float antiaim_enable;
+	float antiaim_pitch;
+	float antiaim_yaw;
+	float antiaim_spinspeed;
+	/* thirdperson */
+	float misc_thirdperson;
+	bool isThirdPerson = false; /* dont add this to the menu, nor the config */
 	/* | never add these to the config manager (if you do, youre a retard)*/
 	/* V*/
 	float config_save;

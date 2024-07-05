@@ -45,6 +45,8 @@ DWORD WINAPI dwMainThread( LPVOID lpArguments )
 		gInts.EventManager = (IGameEventManager2*)EngineFactory("GAMEEVENTSMANAGER002", NULL);
 
 		gListener.Init();
+
+		gInts.Globals = *reinterpret_cast<CGlobals**>(gSignatures.GetEngineSignature("A1 ? ? ? ? 8B 11 68") + 0x8);//g_Pattern.Find(ENGINE, _(L"A1 ? ? ? ? 8B 11 68")) + 0x8);
 		XASSERT(gInts.Client);
 		XASSERT(gInts.EntList);
 		XASSERT(gInts.Engine);

@@ -392,6 +392,11 @@ public:
 	{
 		return (this->GetCond() & TFCond_Zoomed);
 	}
+	void ForceTauntCam(bool t) // From Dumpster fire
+	{
+		DYNVAR(n, bool, "DT_TFPlayer", "m_nForceTauntCam");
+		return n.SetValue(this, t);
+	}
 	//Some stuff later defined in CBaseEntity.cpp
 
 	int GetHealth();
@@ -1223,6 +1228,7 @@ public:
 	CTFPartyClient* PartyClient;
 	IGameEventManager2* EventManager;
 	CTFGCClientSystem* GClientPartySystem;
+	CGlobals* Globals;
 };
 
 extern CInterfaces gInts;

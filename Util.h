@@ -33,6 +33,10 @@ public:
 		}
 
 	}
+	float RandFloatRange(float min, float max)
+	{
+		return (min + 1) + (((float)rand()) / (float)RAND_MAX) * (max - (min + 1));
+	}
 	void LogToConsole(const char* message)
 	{
 		std::string console = "echo " + std::string(message);

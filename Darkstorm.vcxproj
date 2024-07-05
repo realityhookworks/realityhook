@@ -88,6 +88,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AA.cpp" />
     <ClCompile Include="Aimbot.cpp" />
     <ClCompile Include="AutoQueue.cpp" />
     <ClCompile Include="BitBuff.cpp" />
@@ -112,6 +113,7 @@
     <ClCompile Include="VMTHooks.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AA.h" />
     <ClInclude Include="Aimbot.h" />
     <ClInclude Include="AutoQueue.h" />
     <ClInclude Include="bitbuff.h" />

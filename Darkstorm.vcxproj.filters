@@ -67,6 +67,9 @@
     <ClCompile Include="Startup.cpp">
       <Filter>Hacks\StartThing</Filter>
     </ClCompile>
+    <ClCompile Include="AA.cpp">
+      <Filter>Hacks\Anti-Aim</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CDrawManager.h">
@@ -153,6 +156,9 @@
     <ClInclude Include="StartUp.h">
       <Filter>Hacks\StartThing</Filter>
     </ClInclude>
+    <ClInclude Include="AA.h">
+      <Filter>Hacks\Anti-Aim</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Headers">
@@ -187,6 +193,9 @@
     </Filter>
     <Filter Include="Hacks\StartThing">
       <UniqueIdentifier>{1bbecc81-499e-42dc-a977-1a62a085ad45}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Hacks\Anti-Aim">
+      <UniqueIdentifier>{dd89f33c-983f-4c91-a1a6-7f3a254f7205}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

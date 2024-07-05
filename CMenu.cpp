@@ -28,6 +28,13 @@ char* szHitboxes[] =
 	"Right Hip", "Right Knee", "Right Foot",
 };
 
+char* pitch[] = {
+	"None", "Fake UP", "UP", "Fake Down", "Down"
+};
+char* yaw[] = {
+	"None", "Right", "Left", "Back", "Emotion", "Random", "Fake Sideways Right", "Fake Sideways Left", "Fake Right", "Half Backwards Left", "Half Backwards Right", "Fake Left", "Spin"
+};
+
 int CCheatMenu::AddItem(int nIndex, char szTitle[30], float* value, float flMin, float flMax, float flStep, bool isClassSwitch)
 {
 	strcpy(pMenu[nIndex].szTitle, szTitle);
@@ -51,7 +58,6 @@ void CCheatMenu::Render(void)
 		i = AddItem(i, " - Enabled", &gCvars.aimbot_active, 0, 1, 1, false);
 		i = AddItem(i, " - Silent", &gCvars.aimbot_silent, 0, 1, 1, false);
 		i = AddItem(i, " - Fov", &gCvars.aimbot_fov, 0, 280, 1, false);
-		i = AddItem(i, " - Hitscan", &gCvars.aimbot_hitscan, 0, 1, 1, false);
 		i = AddItem(i, " - Hitbox", &gCvars.aimbot_hitbox, 0, 18, 1, false);
 		i = AddItem(i, " - Autoshoot", &gCvars.aimbot_autoshoot, 0, 1, 1, false);
 		i = AddItem(i, " - AutoScope", &gCvars.aimbot_autoscope, 0, 1, 1, false);
@@ -94,6 +100,13 @@ void CCheatMenu::Render(void)
 			gConfig.Load();
 		}
 	}
+	i = AddItem(i, "Anti-Aim", &gCvars.antiaim_switch, 0, 1, 1, true);
+	if (gCvars.antiaim_switch)
+	{
+		i = AddItem(i, "- Enable", &gCvars.antiaim_enable, 0, 1, 1, false);
+		i = AddItem(i, "- Pitch", &gCvars.antiaim_pitch, 0, 5, 1, false);
+		i = AddItem(i, "- Yaw", &gCvars.antiaim_yaw, 0, 13, 1, false);
+	}
 
 	i = AddItem(i, "Misc", &gCvars.misc_switch, 0, 1, 1, true);
 	if (gCvars.misc_switch)
@@ -102,6 +115,7 @@ void CCheatMenu::Render(void)
 		i = AddItem(i, " - Autostrafe", &gCvars.misc_autostrafe, 0, 1, 1, false);
 		i = AddItem(i, " - Noisemaker Spam", &gCvars.misc_noisemaker_spam, 0, 1, 1, false);
 		i = AddItem(i, " - AutoQueue & AutoRQ", &gCvars.misc_autoqueue, 0, 1, 1, false);
+		i = AddItem(i, " - Thirdperson (KEY B)", &gCvars.misc_thirdperson, 0, 1, 1, false);
 		i = AddItem(i, " - Micspam", &gCvars.misc_micspam, 0, 1, 1, false);
 		i = AddItem(i, " - ChatSpam", &gCvars.misc_chatspam, 0, 1, 1, false);
 		i = AddItem(i, " - Record", &gCvars.misc_record, 0, 1, 1, false);
@@ -214,6 +228,15 @@ void CCheatMenu::DrawMenu(void)
 				else if (!strcmp(pMenu[i].szTitle, " - Bones"))
 				{
 					gDrawManager.DrawString(xx, y + (h * i), pMenu[i].value[0] ? Color::White() : Color(105, 105, 105, 255), "%s", szBoneModes[(int)pMenu[i].value[0]]);
+				}
+
+				else if (!strcmp(pMenu[i].szTitle, " - Pitch"))
+				{
+					gDrawManager.DrawString(xx, y + (h * i), pMenu[i].value[0] ? Color::White() : Color(105, 105, 105, 255), "%s", pitch[(int)pMenu[i].value[0]]);
+				}
+				else if (!strcmp(pMenu[i].szTitle, " - Yaw"))
+				{
+					gDrawManager.DrawString(xx, y + (h * i), pMenu[i].value[0] ? Color::White() : Color(105, 105, 105, 255), "%s", yaw[(int)pMenu[i].value[0]]);
 				}
 
 				else if (pMenu[i].flMax == 18)

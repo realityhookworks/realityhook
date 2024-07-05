@@ -5,6 +5,10 @@
 #include "Followbot.h"
 #include "ChatSpam.h"
 #include "Misc.h"
+#include "AA.h"
+
+CGlobalzz g;
+
 //============================================================================================
 bool __fastcall Hooked_CreateMove(PVOID ClientMode, int edx, float input_sample_frametime, CUserCmd* pCommand)
 {
@@ -16,10 +20,12 @@ bool __fastcall Hooked_CreateMove(PVOID ClientMode, int edx, float input_sample_
 			return false;
 
 		CBaseEntity* pLocal = GetBaseEntity(me); 
-
+		CBaseEntity* oEntity = gInts.EntList->GetClientEntity(gInts.Engine->GetLocalPlayer());
 		if (!pLocal)
 			return bReturn;
 
+		uintptr_t _bp; __asm mov _bp, ebp;
+		g.sendpacket = (bool*)(***(uintptr_t***)_bp - 1);
 		
 		if (pLocal->GetTeamNum() || pLocal->GetClassNum())
 		{
@@ -37,6 +43,7 @@ bool __fastcall Hooked_CreateMove(PVOID ClientMode, int edx, float input_sample_
 			}
 		}
 		gSpam.Run();
+		gAntiAim.Run(pLocal, pCommand);
 		gMisc.Run(pLocal, pCommand);
 		gAim.Run(pLocal, pCommand);
 		gNav.Run(pLocal, pCommand);
