@@ -1214,6 +1214,9 @@ public:
 		return getvfunc<OriginalFn>(this, 3)(this, listener, name, bServerSide);
 	}
 };
+#include "steam\ISteamClient017.h"
+#include "steam\ISteamFriends002.h"
+#include "steam\ISteamUser017.h"
 class CInterfaces
 {
 public:
@@ -1229,6 +1232,9 @@ public:
 	IGameEventManager2* EventManager;
 	CTFGCClientSystem* GClientPartySystem;
 	CGlobals* Globals;
+	ISteamClient017* steamclient;
+	ISteamFriends002* steamfriends;
+	ISteamUser017* steamuser;
 };
 
 extern CInterfaces gInts;

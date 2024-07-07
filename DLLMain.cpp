@@ -14,6 +14,7 @@ CreateInterface_t EngineFactory = NULL;
 CreateInterface_t ClientFactory = NULL;
 CreateInterface_t VGUIFactory = NULL;
 CreateInterface_t VGUI2Factory = NULL;
+CreateInterface_t SteamFactory = NULL;
 
 DWORD WINAPI dwMainThread( LPVOID lpArguments )
 {
@@ -35,6 +36,7 @@ DWORD WINAPI dwMainThread( LPVOID lpArguments )
 		ClientFactory = ( CreateInterfaceFn ) GetProcAddress( gSignatures.GetModuleHandleSafe( "client.dll" ), "CreateInterface" );
 		EngineFactory = (CreateInterfaceFn)GetProcAddress(gSignatures.GetModuleHandleSafe("engine.dll"), "CreateInterface");
 		VGUIFactory = (CreateInterfaceFn)GetProcAddress(gSignatures.GetModuleHandleSafe("vguimatsurface.dll"), "CreateInterface");
+		SteamFactory = (CreateInterfaceFn)GetProcAddress(GetModuleHandleA("SteamClient.dll"), "CreateInterface");
 
 		gInts.Client = ( CHLClient* )ClientFactory( "VClient017", NULL);
 		gInts.EntList = ( CEntList* ) ClientFactory( "VClientEntityList003", NULL );
@@ -43,6 +45,13 @@ DWORD WINAPI dwMainThread( LPVOID lpArguments )
 		gInts.EngineTrace = ( IEngineTrace* ) EngineFactory( "EngineTraceClient003", NULL );
 		gInts.ModelInfo = ( IVModelInfo* ) EngineFactory( "VModelInfoClient006", NULL );
 		gInts.EventManager = (IGameEventManager2*)EngineFactory("GAMEEVENTSMANAGER002", NULL);
+		gInts.steamclient = (ISteamClient017*)SteamFactory("SteamClient017", NULL);
+
+		HSteamPipe hNewPipe = gInts.steamclient->CreateSteamPipe();
+		HSteamUser hNewUser = gInts.steamclient->ConnectToGlobalUser(hNewPipe);
+
+		gInts.steamfriends = reinterpret_cast<ISteamFriends002*>(gInts.steamclient->GetISteamFriends(hNewUser, hNewPipe, STEAMFRIENDS_INTERFACE_VERSION_002));
+		gInts.steamuser = reinterpret_cast<ISteamUser017*>(gInts.steamclient->GetISteamUser(hNewUser, hNewPipe, STEAMUSER_INTERFACE_VERSION_017));
 
 		gListener.Init();
 

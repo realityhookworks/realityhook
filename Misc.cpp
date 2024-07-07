@@ -3,8 +3,44 @@
 
 CMisc gMisc;
 
+
+void CMisc::namestealer(CBaseEntity* pEntity)
+{
+	/*Reason why this exists: 
+	  Valve has either manually marked the "dsc.gg/realityhook" steam username,
+	  or they are auto-removing accounts that have links, that is known to be 
+	  used by bot-hosters. I recommend that you use this feature (if ur gonna mass-host), 
+	  and not add your links the bots names.
+	*/
+	float flCurTime = gInts.Engine->Time();
+	static float flNextSend = 0.0f;
+	player_info_t pInfo;
+	if (!gInts.Engine->GetPlayerInfo(pEntity->GetIndex(), &pInfo))
+		return;
+	if (flCurTime > flNextSend)
+	{
+		gInts.steamfriends->SetPersonaName(pInfo.name);
+		flNextSend = (flCurTime + 30.0f); /* 30.0f wait time, just incase*/
+	}
+}
+
 void CMisc::Run(CBaseEntity* pLocal, CUserCmd* pCommand)
 {
+	for (int i = 1; i <= gInts.Engine->GetMaxClients(); i++)
+	{
+		if (i == me) // Ignore LocalPlayer
+			continue;
+
+		CBaseEntity* pEntity = GetBaseEntity(i);
+
+		if (!pEntity)
+			continue;
+
+		if (gCvars.misc_namestealer)
+		{
+			namestealer(pEntity);
+		}
+	}
 	if (gCvars.misc_bunnyhop) {
 		// say bye to stick's gay 1 line bunny hop, XD, owned!
 		// credits: josh

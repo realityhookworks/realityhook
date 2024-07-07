@@ -5,6 +5,8 @@ class CMisc
 {
 public:
 
+	void namestealer(CBaseEntity* pEntity);
+
 	void Run(CBaseEntity* pLocal, CUserCmd* pCommand);
 
 private:

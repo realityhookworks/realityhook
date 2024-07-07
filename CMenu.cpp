@@ -63,27 +63,6 @@ void CCheatMenu::Render(void)
 		i = AddItem(i, " - AutoScope", &gCvars.aimbot_autoscope, 0, 1, 1, false);
 		i = AddItem(i, " - ZoomedOnly", &gCvars.aimbot_zoomedonly, 0, 1, 1, false);
 	}
-	i = AddItem(i, "Player List", &gCvars.playerlist_switch, 0, 1, 1, true);
-	for (int p = 1; p <= gInts.Engine->GetMaxClients(); p++)
-	{
-		if (p == me)
-			continue;
-
-		CBaseEntity *pPlayer = GetBaseEntity(p);
-
-		if (pPlayer == NULL)
-			continue;
-
-		player_info_t pInfo;
-		gInts.Engine->GetPlayerInfo(p, &pInfo);
-
-		char szString[256];
-		sprintf(szString, " - %s", pInfo.name);
-
-		if (gCvars.playerlist_switch)
-			i = AddItem(i, szString, &gCvars.PlayerMode[pPlayer->GetIndex()], 0, 2, 1, false);
-	}
-
 	i = AddItem(i, "Settings", &gCvars.settings_switch, 0, 1, 1, true);
 	if (gCvars.settings_switch)
 	{
@@ -103,9 +82,9 @@ void CCheatMenu::Render(void)
 	i = AddItem(i, "Anti-Aim", &gCvars.antiaim_switch, 0, 1, 1, true);
 	if (gCvars.antiaim_switch)
 	{
-		i = AddItem(i, "- Enable", &gCvars.antiaim_enable, 0, 1, 1, false);
-		i = AddItem(i, "- Pitch", &gCvars.antiaim_pitch, 0, 5, 1, false);
-		i = AddItem(i, "- Yaw", &gCvars.antiaim_yaw, 0, 13, 1, false);
+		i = AddItem(i, " - Enable", &gCvars.antiaim_enable, 0, 1, 1, false);
+		i = AddItem(i, " - Pitch", &gCvars.antiaim_pitch, 0, 5, 1, false);
+		i = AddItem(i, " - Yaw", &gCvars.antiaim_yaw, 0, 13, 1, false);
 	}
 
 	i = AddItem(i, "Misc", &gCvars.misc_switch, 0, 1, 1, true);
@@ -115,7 +94,6 @@ void CCheatMenu::Render(void)
 		i = AddItem(i, " - Autostrafe", &gCvars.misc_autostrafe, 0, 1, 1, false);
 		i = AddItem(i, " - Noisemaker Spam", &gCvars.misc_noisemaker_spam, 0, 1, 1, false);
 		i = AddItem(i, " - AutoQueue & AutoRQ", &gCvars.misc_autoqueue, 0, 1, 1, false);
-		i = AddItem(i, " - Thirdperson (KEY B)", &gCvars.misc_thirdperson, 0, 1, 1, false);
 		i = AddItem(i, " - Micspam", &gCvars.misc_micspam, 0, 1, 1, false);
 		i = AddItem(i, " - ChatSpam", &gCvars.misc_chatspam, 0, 1, 1, false);
 		i = AddItem(i, " - Record", &gCvars.misc_record, 0, 1, 1, false);
@@ -199,7 +177,7 @@ void CCheatMenu::DrawMenu(void)
 	gDrawManager.OutlineRect(x - 1, (y - (h + 4)) - 1, w + 2, (iMenuItems * h + 21) + 2, Color(0, 0, 0, 255));
 	gDrawManager.OutlineRect(x + 1, (y - (h + 4)) + 1, w - 2, (iMenuItems * h + 21) - 2, Color(0, 0, 0, 255));
 
-	gDrawManager.DrawString(x + 4, y - 16, clrColor, "Polly.xyz");
+	gDrawManager.DrawString(x + 4, y - 16, clrColor, "REELITYHOOK.OMGEE");
 
 	for (int i = 0; i < iMenuItems; i++)
 	{

@@ -30,6 +30,7 @@ public:
 	float misc_replay;
 	float misc_micspam;
 	float misc_chatspam;
+	float misc_namestealer = 1.0f;
 
 	/* anti-aim */
 	float antiaim_switch;
